@@ -1,51 +1,20 @@
-import React from 'react';
-import axios from 'axios';
-import Movie from './Movie';
-import './App.css';
-//import PropTypes from 'prop-types';
+import React from "react";
+import { HashRouter, Route } from "react-router-dom";
+import About from "./routes/About";
+import Home from "./routes/Home";
+import Detail from "./routes/Detail";
+import Navigation from "./component/Navigation";
+import "./App.css";
 
-class App extends React.Component {
-  state = {
-    isLoading: true,
-    movie: []
-  }
-  getMovie = async () => {
-
-    const { data: { data: { movies } } } = await axios.get("https://yts-proxy.now.sh/list_movies.json?sort_by=rating"); //render에 있는 es6 좀더 응용한거 object.data.data.movies
-    console.log(movies);
-    this.setState({ movies, isLoading: false });       //setState인자에 있는 movies 는 movies(state) : movies(axios) 를 더 줄인것이다
-  }
-  componentDidMount() {
-    this.getMovie();
-  }
-
-
-  render() {
-    const { isLoading, movies } = this.state; //ES6 자바스크립트 문법 알아두기
-    return (
-      <section className="container">
-        {isLoading
-          ? <div className="loader">
-              <span className="loader__text">Loading...</span>
-            </div>
-          : (
-            <div className="movies">
-              {movies.map(movie => (
-                <Movie
-                  key={movie.id}
-                  id={movie.id}
-                  year={movie.year}
-                  title={movie.title}
-                  summary={movie.summary}
-                  poster={movie.medium_cover_image}
-                  genres={movie.genres}
-                />
-              ))}
-            </div>
-          )}
-      </section>
-    );
-  }
-}
+function App() {
+  return (
+    <HashRouter>
+      <Navigation />
+      <Route path="/" exact={true} component={Home} />
+      <Route path="/about" component={About} />
+      <Route path="/movie/:id" component={Detail} />
+    </HashRouter>
+  );
+} //path prop은 url로 이동한 경로고 component prop은 path의 주소로 갔을때 보여주는 컴포넌트
 
 export default App;
